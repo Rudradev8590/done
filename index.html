@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Check</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📸 Camera Check</h1>
+        <video id="video" autoplay></video>
+        <button id="capture">Capture Image</button>
+        <canvas id="canvas"></canvas>
+        <p id="status">Waiting for camera...</p>
+    </div>
+
+    <script>
+        // Access webcam
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureButton = document.getElementById('capture');
+        const statusText = document.getElementById('status');
+
+        // Request camera access
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                video.srcObject = stream;
+                statusText.textContent = "Camera is active!";
+            })
+            .catch((error) => {
+                statusText.textContent = "Camera access denied!";
+                console.error("Error accessing camera:", error);
+            });
+
+        // Capture image
+        captureButton.addEventListener("click", () => {
+            const ctx = canvas.getContext("2d");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            statusText.textContent = "Image captured!";
+        });
+    </script>
+</body>
+</html>
